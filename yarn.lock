@@ -3514,6 +3514,11 @@ https-proxy-agent@5, https-proxy-agent@^5.0.0:
     agent-base "6"
     debug "4"
 
+https@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/https/-/https-1.0.0.tgz#3c37c7ae1a8eeb966904a2ad1e975a194b7ed3a4"
+  integrity sha1-PDfHrhqO65ZpBKKtHpdaGUt+06Q=
+
 human-signals@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
@@ -5403,10 +5408,10 @@ progress@^2.0.0:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
 
-projen@^0.17.32:
-  version "0.17.44"
-  resolved "https://registry.yarnpkg.com/projen/-/projen-0.17.44.tgz#b1917ac8a5116d4a59dbfbf3b787a82530dc02b4"
-  integrity sha512-8nFtkzRF4rPzZXVcSEbNxbz7H4fVfqe9dKN7tCx1bVeIbNbCosNAhpXOUfDyeqZs8pHMN9wfxLf7uAPHdU7kRw==
+projen@^0.17.67:
+  version "0.17.67"
+  resolved "https://registry.yarnpkg.com/projen/-/projen-0.17.67.tgz#420ddbcc21926493ebd9c324b3be331fb22fd633"
+  integrity sha512-GHdmM/KCUZIaG/uxlItIi6iEJu3Ta0M8xTHTGtLCvKrQ3n6vi/MqqlPD7PtwN5GOL5JWC86Wpng3o9j/X/J+Tw==
   dependencies:
     "@iarna/toml" "^2.2.5"
     chalk "^4.1.0"

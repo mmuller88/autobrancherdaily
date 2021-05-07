@@ -14,9 +14,17 @@ const project = new AwsCdkTypeScriptApp({
   ],
   cdkVersionPinning: true,
   devDeps: ['esbuild', 'eslint'],
-  deps: [
-    '@types/node@^14.14.37',
-  ],
+  deps: ['@types/node@^14.14.37', 'https'],
+  tsconfig: {
+    compilerOptions: {
+      allowJs: true,
+    },
+  },
+  jestOptions: {
+    jestConfig: {
+      testTimeout: 10000,
+    },
+  },
 });
 
 project.synth();

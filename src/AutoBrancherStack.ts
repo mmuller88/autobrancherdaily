@@ -1,9 +1,9 @@
 import * as path from 'path';
 import { LayerVersion, Runtime } from '@aws-cdk/aws-lambda';
-import { SnsEventSource } from '@aws-cdk/aws-lambda-event-sources';
-import { Secret } from '@aws-cdk/aws-secretsmanager';
+// import { SnsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
-import { Topic } from '@aws-cdk/aws-sns';
+import { Secret } from '@aws-cdk/aws-secretsmanager';
+// import { Topic } from '@aws-cdk/aws-sns';
 import { Construct, Duration, Stack, StackProps } from '@aws-cdk/core';
 
 interface AutoBrancherStackProps extends StackProps {
@@ -20,16 +20,17 @@ interface AutoBrancherStackProps extends StackProps {
   readonly repository: string;
 
   /**
-   * The SNS Topic arn to subscribe to for CDK construct publishing messages
+   * the cdk repo you want to listen for new releases
    */
-  readonly topicArn: string;
+  // readonly cdkRepo: string;
 }
 
 export class AutoBrancherStack extends Stack {
   constructor(scope: Construct, id: string, props: AutoBrancherStackProps) {
     super(scope, id, props);
 
-    const layerVersionArn = props.gitLambdaLayerArn ?? 'arn:aws:lambda:us-east-1:553035198032:layer:git-lambda2:8';
+    // const layerVersionArn = props.gitLambdaLayerArn ?? `arn:aws:lambda:${this.region}:553035198032:layer:git-lambda2:8`;
+    const curlLayer = `arn:aws:lambda:${this.region}:744348701589:layer:bash:8`;
 
     const secret = new Secret(this, 'DeployKey', {
       secretName: `${id}/deploy-key`,
@@ -42,12 +43,14 @@ export class AutoBrancherStack extends Stack {
       environment: {
         SECRET_ID: secret.secretArn,
         REPOSITORY: props.repository,
+        // CDK_REPO: props.cdkRepo,
       },
       timeout: Duration.seconds(30),
     });
     secret.grantRead(lambda);
-    lambda.addLayers(LayerVersion.fromLayerVersionArn(this, 'GitLayer', layerVersionArn));
-    const topic = Topic.fromTopicArn(this, 'ConstructPublishedListener', props.topicArn);
-    lambda.addEventSource(new SnsEventSource(topic));
+    // lambda.addLayers(LayerVersion.fromLayerVersionArn(this, 'GitLayer', layerVersionArn));
+    lambda.addLayers(LayerVersion.fromLayerVersionArn(this, 'BashLayer', curlLayer));
+    // const topic = Topic.fromTopicArn(this, 'ConstructPublishedListener', props.topicArn);
+    // lambda.addEventSource(new SnsEventSource(topic));
   }
 }

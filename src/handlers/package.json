@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "https": "^1.0.0",
     "simple-git": "^2.37.0"
   }
 }
