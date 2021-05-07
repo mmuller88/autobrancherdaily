@@ -62,8 +62,8 @@ export const handler = async (event: any) => {
   responseString = responseString.substring(responseString.indexOf('tag_name') + 14);
   responseString = responseString.substring(0, responseString.indexOf(',') - 2);
 
-  // let version = responseString;
-  let version = '1.98.0';
+  let version = responseString;
+  // let version = '1.98.0';
   console.debug(version);
 
   const workDir = path.join('/tmp', 'autobrancher');

@@ -6,6 +6,8 @@ It originated from Matthew Bonig [blog post](https://matthewbonig.com/2021/04/06
 
 My main motivation to tweak Matthew's Autobrancher was that I it is inconvenient to subscribe to the CDK Catalog for triggering new PRs. That way I simply check the aws cdk github page.
 
+As well I don't intend to use the Autobrancher Daily for upating the CDK version for real. I only want to see if newer versions are still compatible. The developer using the client repo is responsible for setting the peer dependencies!
+
 # Using this App
 
 ## Prepare the client CDK Repo
