@@ -11,6 +11,8 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-lambda-nodejs',
     '@aws-cdk/aws-secretsmanager',
     '@aws-cdk/aws-sns',
+    '@aws-cdk/aws-events',
+    '@aws-cdk/aws-events-targets',
   ],
   cdkVersionPinning: true,
   devDeps: ['esbuild', 'eslint'],
@@ -26,5 +28,8 @@ const project = new AwsCdkTypeScriptApp({
     },
   },
 });
+
+project.setScript('cdkDeploy', 'cdk deploy');
+project.setScript('cdkDestroy', 'cdk destroy');
 
 project.synth();

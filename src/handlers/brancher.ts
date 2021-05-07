@@ -3,17 +3,12 @@ import * as path from 'path';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as AWS from 'aws-sdk';
-AWS.config.update({ region: process.env.AWS_REGION });
 import simpleGit, { SimpleGit, SimpleGitOptions } from 'simple-git';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const https = require('https');
 
 const secretsManager = new AWS.SecretsManager();
 
-const repository = process.env.REPOSITORY;
-const secretId = process.env.SECRET_ID || '';
-
-// eslint-disable-next-line @typescript-eslint/no-shadow
 export function getRepoName(repository: string) {
   let match = repository!.match(new RegExp('((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\/\\-~]+)\/([\\w\\.@\\/\\-~]+)(\\.git)(/)?') as any);
   if (!match) {
@@ -26,10 +21,10 @@ export function getRepoName(repository: string) {
   return repoName;
 }
 
-async function getSecretString() {
+async function getSecretString(secretId: string) {
   const { SecretString: secretString } = await secretsManager.getSecretValue({ SecretId: secretId! }).promise();
   if (!secretString) {
-    const message = `The secret string retrieved does not have a value. This should be a private SSH key used for accessing the repo: ${repository}`;
+    const message = 'The secret string retrieved does not have a value. This should be a private SSH key used for accessing the repo';
     console.error(message);
     throw new Error(message);
   }
@@ -61,13 +56,14 @@ export const handler = async (event: any) => {
   console.log(JSON.stringify(event, null, 2));
 
   let response: any = await request();
-  // console.debug(response);
 
+  // parse the latest tag version out of the response
   let responseString = JSON.stringify(response);
-  responseString = responseString.substring(responseString.indexOf('tag_name') + 13);
+  responseString = responseString.substring(responseString.indexOf('tag_name') + 14);
   responseString = responseString.substring(0, responseString.indexOf(',') - 2);
 
-  let version = responseString;
+  // let version = responseString;
+  let version = '1.98.0';
   console.debug(version);
 
   const workDir = path.join('/tmp', 'autobrancher');
@@ -87,7 +83,13 @@ export const handler = async (event: any) => {
 
     const branchName = `bump/${version}`;
 
-    const secretString = await getSecretString();
+    const secretId = process.env.SECRET_ID || '';
+
+    const secretString = await getSecretString(secretId);
+
+    console.debug(`ssh: ${secretString}`);
+
+    const repository = process.env.REPOSITORY;
 
     const repoName = getRepoName(repository!);
     const clonedPath = path.join(workDir, repoName!);
@@ -101,7 +103,8 @@ export const handler = async (event: any) => {
       GIT_SSH_COMMAND,
     });
     console.log('Cloning repo');
-    await git.clone(repository!);
+    let resp = await git.clone(repository!);
+    console.log(resp);
     await git.cwd(clonedPath);
 
     console.log(`Creating new branch ${branchName}`);

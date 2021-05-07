@@ -17,7 +17,9 @@
     "destroy": "npx projen destroy",
     "diff": "npx projen diff",
     "projen": "npx projen",
-    "start": "npx projen start"
+    "start": "npx projen start",
+    "cdkDeploy": "cdk deploy",
+    "cdkDestroy": "cdk destroy"
   },
   "devDependencies": {
     "@types/jest": "^26.0.22",
@@ -41,6 +43,8 @@
   },
   "dependencies": {
     "@aws-cdk/assert": "1.96.0",
+    "@aws-cdk/aws-events": "1.96.0",
+    "@aws-cdk/aws-events-targets": "1.96.0",
     "@aws-cdk/aws-lambda": "1.96.0",
     "@aws-cdk/aws-lambda-event-sources": "1.96.0",
     "@aws-cdk/aws-lambda-nodejs": "1.96.0",

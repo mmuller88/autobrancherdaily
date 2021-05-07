@@ -19,8 +19,6 @@ const stackRepoName = getRepoName(repository);
 new AutoBrancherStack(app, `auto-brancher-daily-${stackRepoName}`, {
   env: devEnv,
   repository,
-  // cdkRepo,
-  // topicArn,
 });
 
 app.synth();
