@@ -15,11 +15,19 @@ As well I don't intend to use the Autobrancher Daily for upating the CDK version
 - Create .github/workflows/cdkbump.yml . check if you raising PRs against master or main! e.g. https://github.com/mbonig/rds-tools/blob/master/.github/workflows/cdkbump.yml
 - Set the GitHub Secret PUSHABLE_GITHUB_TOKEN="GitHub Token to allow pushing"
 
-## Post Stack manual updates
+## Prepare AutoBranchers Stack
 
-You will need an SSH keypair to push the new branch to the repository. After your stack is created, update the secret
-called `auto-brancher-<your repo name>/deploy-key` with the _private_ side of your keypair. The public key should be
-setup with your repository provider, like Github.
+After you deployed it with the usuals **new projen** or **pj** and **yarn deploy** you need to insert your GitHub password in the created secret. Yeah thats a bummer and I hope I can switch to use an ssh key in the future ...
+
+# Example
+
+```ts
+new AutoBranchersStack(app, 'auto-brancher-daily', {
+  env: devEnv,
+  gitHubUser: 'mmuller88',
+  repoNames: ['aws-cdk-staging-pipeline', 'aws-cdk-build-badge'],
+});
+```
 
 # Limitation
 
