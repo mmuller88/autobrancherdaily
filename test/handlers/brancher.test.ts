@@ -3,7 +3,6 @@ import { handler } from '../../src/handlers/brancher';
 
 describe('brancher', () => {
   it('does things', async () => {
-    process.env.SECRET_ID = 'arn:aws:secretsmanager:us-east-1:536309290949:secret:auto-brancher/deploy-key-yz1BE3';
     // process.env.REPOSITORY = 'git@github.com:mmuller88/aws-cdk-staging-pipeline.git';
     process.env.REPOSITORY = 'https://mmuller88:PASSWORD@github.com/mmuller88/aws-cdk-staging-pipeline.git';
     process.env.REPO_NAME = 'aws-cdk-staging-pipeline';

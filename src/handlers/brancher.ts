@@ -90,7 +90,7 @@ export const handler = async (event: any) => {
 
     const secretString = await getSecretString(secretId);
 
-    console.debug(`ssh: ${secretString}`);
+    // console.debug(`ssh: ${secretString}`);
 
     const repository = process.env.REPOSITORY;
 
@@ -112,8 +112,7 @@ export const handler = async (event: any) => {
     //execSync('chown -R $(id -u):$(id -g) /home/sbx_user1051', { encoding: 'utf8', stdio: 'inherit' });
 
     console.log('Cloning repo');
-    let resp = await git.clone(repository!.replace(/PASSWORD/, secretString));
-    console.log(resp);
+    await git.clone(repository!.replace(/PASSWORD/, secretString));
     await git.cwd(clonedPath);
 
     console.log(`Creating new branch ${branchName}`);
