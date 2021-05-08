@@ -20,6 +20,8 @@ interface AutoBrancherStackProps extends StackProps {
    * The SSH repository URL that is cloned, branched, and pushed back.
    */
   readonly repository: string;
+
+  readonly repoName: string;
 }
 
 export class AutoBrancherStack extends Stack {
@@ -39,6 +41,7 @@ export class AutoBrancherStack extends Stack {
       environment: {
         SECRET_ID: secret.secretArn,
         REPOSITORY: props.repository,
+        REPO_NAME: props.repoName,
       },
       timeout: Duration.seconds(30),
     });

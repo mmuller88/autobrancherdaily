@@ -7,19 +7,22 @@ import simpleGit, { SimpleGit, SimpleGitOptions } from 'simple-git';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const https = require('https');
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+// const { execSync } = require('child_process')
+
 const secretsManager = new AWS.SecretsManager();
 
-export function getRepoName(repository: string) {
-  let match = repository!.match(new RegExp('((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\/\\-~]+)\/([\\w\\.@\\/\\-~]+)(\\.git)(/)?') as any);
-  if (!match) {
-    const message = `Couldn't parse the repository name. Got: ${repository}`;
-    console.error(message);
-    throw new Error(message);
-  }
-  const repoName = match[8] as string;
-  console.log('Found repoName: ', repoName);
-  return repoName;
-}
+// export function getRepoName(repository: string) {
+//   let match = repository!.match(new RegExp('((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\/\\-~]+)\/([\\w\\.@\\/\\-~]+)(\\.git)(/)?') as any);
+//   if (!match) {
+//     const message = `Couldn't parse the repository name. Got: ${repository}`;
+//     console.error(message);
+//     throw new Error(message);
+//   }
+//   const repoName = match[8] as string;
+//   console.log('Found repoName: ', repoName);
+//   return repoName;
+// }
 
 async function getSecretString(secretId: string) {
   const { SecretString: secretString } = await secretsManager.getSecretValue({ SecretId: secretId! }).promise();
@@ -31,10 +34,10 @@ async function getSecretString(secretId: string) {
   return secretString;
 }
 
-function writeDeployKey(deployKeyFileName: string, secretString: string) {
-  fs.writeFileSync(deployKeyFileName, secretString);
-  fs.chmodSync(deployKeyFileName, 0o400);
-}
+// function writeDeployKey(deployKeyFileName: string, secretString: string) {
+//   fs.writeFileSync(deployKeyFileName, secretString);
+//   fs.chmodSync(deployKeyFileName, 0o400);
+// }
 
 async function request() {
   return new Promise((resolve) => {
@@ -91,19 +94,25 @@ export const handler = async (event: any) => {
 
     const repository = process.env.REPOSITORY;
 
-    const repoName = getRepoName(repository!);
+    // const repoName = getRepoName(repository!);
+    const repoName = process.env.REPO_NAME || '';
     const clonedPath = path.join(workDir, repoName!);
 
+    //fs.writeFileSync('/tmp/known_hosts', 'github.com,192.30.252.*,192.30.253.*,192.30.254.*,192.30.255.* ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==')
+
     // get and setup the deploy key needed to push back to the repo
-    const deployKeyFileName = path.join(workDir, `deploy_keys_${new Date().valueOf()}`);
-    writeDeployKey(deployKeyFileName, secretString);
-    const GIT_SSH_COMMAND = `ssh -i ${deployKeyFileName} -o StrictHostKeyChecking=no`;
+    // const deployKeyFileName = path.join(workDir, `deploy_keys_${new Date().valueOf()}`);
+    // writeDeployKey(deployKeyFileName, secretString);
+    // const GIT_SSH_COMMAND = `ssh -i ${deployKeyFileName} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/tmp/known_hosts`;
     await git.env({
       ...process.env,
-      GIT_SSH_COMMAND,
+      // GIT_SSH_COMMAND,
     });
+
+    //execSync('chown -R $(id -u):$(id -g) /home/sbx_user1051', { encoding: 'utf8', stdio: 'inherit' });
+
     console.log('Cloning repo');
-    let resp = await git.clone(repository!);
+    let resp = await git.clone(repository!.replace(/PASSWORD/, secretString));
     console.log(resp);
     await git.cwd(clonedPath);
 

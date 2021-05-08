@@ -21,6 +21,10 @@ You will need an SSH keypair to push the new branch to the repository. After you
 called `auto-brancher-<your repo name>/deploy-key` with the _private_ side of your keypair. The public key should be
 setup with your repository provider, like Github.
 
+# Limitation
+
+Unlucky I didn't get the ssh key github connection working. So I decided to use the github https url with username and password which gets retrieved from the Secret Manager.
+
 # Issues and Contributing
 
 If you have any problems, please open an Issue on Github. PRs are always welcome.
