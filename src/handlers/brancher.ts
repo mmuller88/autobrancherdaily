@@ -106,6 +106,7 @@ export const handler = async (event: any) => {
 
   for (const repoName of repoNames) {
     try {
+      await git.cwd(workDir);
       console.log('Cloning repo');
       const repository = `https://${gitHubUser}:PASSWORD@github.com/${gitHubUser}/${repoName}.git`;
       await git.clone(repository!.replace(/PASSWORD/, secretString));
