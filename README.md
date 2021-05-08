@@ -12,8 +12,8 @@ As well I don't intend to use the Autobrancher Daily for upating the CDK version
 
 ## Prepare the client CDK Repo
 
-- Create .github/workflows/cdkbump.yml . check if you raising PRs against master or main! e.g. https://github.com/mbonig/rds-tools/blob/master/.github/workflows/cdkbump.yml
-- Set the GitHub Secret PUSHABLE_GITHUB_TOKEN="GitHub Token to allow pushing"
+- Create .github/workflows/cdkbump.yml . check if you raising PRs against master or main! e.g. https://github.com/mmuller88/aws-cdk-build-badge/blob/master/.github/workflows/cdkbump.yml
+- Set the GitHub Secret **PUSHABLE_GITHUB_TOKEN="GitHub Token to allow pushing"**
 
 ## Prepare AutoBranchers Stack
 
