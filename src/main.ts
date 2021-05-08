@@ -1,5 +1,5 @@
 import { App } from '@aws-cdk/core';
-import { AutoBrancherStack } from './AutoBrancherStack';
+import { AutoBranchersStack } from './AutoBrancherStack';
 // import { getRepoName } from './handlers/brancher';
 
 // for development, use account/region from cdk cli
@@ -16,13 +16,13 @@ if (!repository) throw new Error('Please provide a context variable for the \'re
 // const topicArn = 'arn:aws:sns:us-east-1:499430655523:construct-catalog-prod-RendererTopicD9CB70E6-TTOURYQEX9K1';//app.node.tryGetContext('topicArn');
 // if (!topicArn) throw new Error('Please provide a context variable for the \'topicArn\'');
 
-const repoName = 'aws-cdk-staging-pipeline';
+// const repoName = 'aws-cdk-staging-pipeline';
 
 // const stackRepoName = getRepoName(repository);
-new AutoBrancherStack(app, `auto-brancher-daily-${repoName}`, {
+new AutoBranchersStack(app, 'auto-brancher-daily', {
   env: devEnv,
-  repository,
-  repoName,
+  gitHubUser: 'mmuller88',
+  repoNames: ['aws-cdk-staging-pipeline', 'aws-cdk-build-badge'],
 });
 
 app.synth();

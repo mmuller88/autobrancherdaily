@@ -24,7 +24,7 @@ const project = new AwsCdkTypeScriptApp({
   },
   jestOptions: {
     jestConfig: {
-      testTimeout: 10000,
+      testTimeout: 30000,
     },
   },
 });

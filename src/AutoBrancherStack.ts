@@ -8,7 +8,7 @@ import { Construct, Duration, Stack, StackProps } from '@aws-cdk/core';
 import { Rule, Schedule } from '@aws-cdk/aws-events';
 import { LambdaFunction } from '@aws-cdk/aws-events-targets';
 
-interface AutoBrancherStackProps extends StackProps {
+interface AutoBranchersStackProps extends StackProps {
   /**
    * An ARN to a Lambda Layer that is used to provide the SSH and GIT clients to the function runtime.
    *
@@ -16,23 +16,23 @@ interface AutoBrancherStackProps extends StackProps {
    */
   readonly gitLambdaLayerArn?: string;
 
-  /**
-   * The SSH repository URL that is cloned, branched, and pushed back.
-   */
-  readonly repository: string;
+  readonly gitHubUser: string;
 
-  readonly repoName: string;
+  /**
+   * Names of the repositories you want to push against
+   */
+  readonly repoNames: string[];
 }
 
-export class AutoBrancherStack extends Stack {
-  constructor(scope: Construct, id: string, props: AutoBrancherStackProps) {
+export class AutoBranchersStack extends Stack {
+  constructor(scope: Construct, id: string, props: AutoBranchersStackProps) {
     super(scope, id, props);
 
     const layerVersionArn = props.gitLambdaLayerArn ?? `arn:aws:lambda:${this.region}:553035198032:layer:git-lambda2:8`;
 
     const secret = new Secret(this, 'DeployKey', {
       secretName: `${id}/deploy-key`,
-      description: `An SSH private key for pushing changes to the repository ${props.repository}`,
+      description: `An SSH private key for pushing changes to the repositories: ${props.repoNames.join(', ')}`,
     });
 
     const lambda = new NodejsFunction(this, 'Lambda', {
@@ -40,8 +40,8 @@ export class AutoBrancherStack extends Stack {
       runtime: Runtime.NODEJS_14_X,
       environment: {
         SECRET_ID: secret.secretArn,
-        REPOSITORY: props.repository,
-        REPO_NAME: props.repoName,
+        REPO_NAMES: JSON.stringify(props.repoNames),
+        GITHUB_USER: props.gitHubUser,
       },
       timeout: Duration.seconds(30),
     });
